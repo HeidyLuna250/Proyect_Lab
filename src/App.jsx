@@ -1,4 +1,4 @@
-import { useState } from 'react'
+//import { useState } from 'react'
 import './App.css'
 
 const App = () => {
@@ -7,7 +7,7 @@ const App = () => {
     <>
       <h1>Componente principal</h1>
     </>
-  )
+  );
 }
 
 export default App;
