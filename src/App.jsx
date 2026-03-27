@@ -14,7 +14,7 @@ import Pagina404 from "./views/Pagina404";
 const App = () => {
   return(
     <Router>
-      {window.location.pathname !== "/login" && <Encabezado />}
+      <Encabezado />
 
       <main className='margen-superior-main'>
         <Routes>
