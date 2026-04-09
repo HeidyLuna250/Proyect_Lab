@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import FormularioLogin from "../components/login/FormularioLogin";
 import { supabase } from "../database/supabaseconfig";
+import '../App.css';
 
 const Login = () => {
 
-  // Variables y método para el manejo de la sesión
   const [usuario, setUsuario] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState(null);
@@ -13,7 +14,7 @@ const Login = () => {
 
   const iniciarSesion = async () => {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const {data, error} = await supabase.auth.signInWithPassword({
         email: usuario,
         password: contrasena,
       });
@@ -23,27 +24,23 @@ const Login = () => {
         return;
       }
 
-      if (data.user) {
+      if(data.user) {
         localStorage.setItem("usuario-supabase", usuario);
         navegar("/");
       }
-
     } catch (err) {
       setError("Error al conectar con el servidor");
-      console.error("Error en la solicitud:", err);
+      console.error("Error en la solicitud: ", err);
     }
   };
 
-  //validar si un usuario ya se encuentra autenticado
   useEffect(() => {
     const usuarioGuardado = localStorage.getItem("usuario-supabase");
-
     if (usuarioGuardado) {
       navegar("/");
     }
   }, [navegar]);
 
-  //estilos del contendor del formulario
   const estiloContenedor = {
     position: "fixed",
     top: 0,
@@ -53,13 +50,12 @@ const Login = () => {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "linear-gradient(135deg, #b8b6b6, #19a8a3)",
+    background: "linear-gradient(135deg, #FFDEE9, #B5FFFC)",
     overflow: "hidden",
     padding: "20px",
-  };
+  }
 
   return (
-    //vista Login
     <div style={estiloContenedor}>
       <FormularioLogin
         usuario={usuario}
