@@ -6,6 +6,7 @@ import ModalRegistroCategoria from "../components/categorias/ModalRegistroCatego
 import NotificacionOperacion from "../components/NotificacionOperacion";
 import TablaCategorias from "../components/categorias/TablaCategorias"; 
 import TarjetaCategoria from "../components/categorias/TarjetaCategoria"; 
+import ModalEdicionCategoria from "../components/categorias/ModalEdicionCategoria"; 
 
 const Categorias = () => {
   const [toast, setToast] = useState({ mostrar: false, mensaje: "", tipo: "" });
@@ -41,6 +42,7 @@ const Categorias = () => {
     setCategoriaAEliminar(categoria);
     setMostrarModalEliminacion(true);
   };
+  
 
   const cargarCategorias = async () => {
     try {
@@ -69,6 +71,14 @@ const Categorias = () => {
   const manejoCambioInput = (e) => {
     const { name, value } = e.target;
     setNuevaCategoria((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const manejoCambioInputEdicion = (e) => {
+    const { name, value } = e.target;
+    setCategoriaEditar((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -123,6 +133,56 @@ const Categorias = () => {
         mensaje: "Error inesperado al registrar categoría.",
         tipo: "error",
       });
+    }
+  };
+
+  const actualizarCategoria = async () => {
+    try {
+      if (
+        !categoriaEditar.nombre_categoria.trim() ||
+        !categoriaEditar.descripcion_categoria.trim()
+      ) {
+        setToast({
+          mostrar: true,
+          mensaje: "Debe llenar todos los campos.",
+          tipo: "advertencia",
+        });
+        return;
+      }
+
+      setMostrarModalEdicion(false);
+
+      const { error } = await supabase
+        .from("categorias")
+        .update({
+          nombre_categoria: categoriaEditar.nombre_categoria,
+          descripcion_categoria: categoriaEditar.descripcion_categoria,
+        })
+        .eq("id_categoria", categoriaEditar.id_categoria);
+
+      if (error) {
+        console.error("Error al actualizar categoría:", error.message);
+        setToast({
+          mostrar: true,
+          mensaje: `Error al actualizar la categoría ${categoriaEditar.nombre_categoria}.`,
+          tipo: "error",
+        });
+        return;
+      }
+
+      await cargarCategorias();
+      setToast({
+        mostrar: true,
+        mensaje: `Categoría ${categoriaEditar.nombre_categoria} actualizada exitosamente.`,
+        tipo: "exito",
+      });
+    } catch (err) {
+      setToast({
+        mostrar: true,
+        mensaje: "Error inesperado al actualizar categoría.",
+        tipo: "error",
+      });
+      console.error("Excepción al actualizar categoría:", err.message);
     }
   };
 
@@ -181,6 +241,14 @@ const Categorias = () => {
         nuevaCategoria={nuevaCategoria}
         manejoCambioInput={manejoCambioInput}
         agregarCategoria={agregarCategoria}
+      />
+
+      <ModalEdicionCategoria
+        mostrarModalEdicion={mostrarModalEdicion}
+        setMostrarModalEdicion={setMostrarModalEdicion}
+        categoriaEditar={categoriaEditar}
+        manejoCambioInputEdicion={manejoCambioInputEdicion}
+        actualizarCategoria={actualizarCategoria}
       />
       
       <NotificacionOperacion
