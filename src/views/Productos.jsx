@@ -67,13 +67,15 @@ const Productos = () => {
 
       const { data, error } = await supabase
         .from("productos")
-        .select(`
+        .select(
+          `
           *,
           Categorias:categoria_producto (
             id_categoria,
             nombre_categoria
           )
-        `)
+        `,
+        )
         .order("id_producto", { ascending: true });
 
       if (error) throw error;
@@ -152,7 +154,6 @@ const Productos = () => {
         mensaje: "Producto agregado correctamente",
         tipo: "exito",
       });
-
     } catch (err) {
       console.error(err);
       setToast({
@@ -173,8 +174,25 @@ const Productos = () => {
     setMostrarModalEliminacion(true);
   };
 
-  const actualizarProducto = async () => {
+    const actualizarProducto = async () => {
     try {
+
+      let urlImagenActualizada = productoEditar.url_imagen; 
+      if (productoEditar.archivo) {
+
+        const nombreArchivo = `${Date.now()}_${productoEditar.archivo.name}`;
+
+        await supabase.storage
+          .from("imagenes_productos")
+          .upload(nombreArchivo, productoEditar.archivo);
+
+        const { data } = supabase.storage
+          .from("imagenes_productos")
+          .getPublicUrl(nombreArchivo);
+
+        urlImagenActualizada = data.publicUrl; 
+      }
+
       const { error } = await supabase
         .from("productos")
         .update({
@@ -182,6 +200,7 @@ const Productos = () => {
           descripcion_producto: productoEditar.descripcion_producto,
           categoria_producto: productoEditar.categoria_producto,
           precio_venta: parseFloat(productoEditar.precio_venta),
+          url_imagen: urlImagenActualizada, 
         })
         .eq("id_producto", productoEditar.id_producto);
 
@@ -218,7 +237,6 @@ const Productos = () => {
         mensaje: "Producto eliminado",
         tipo: "exito",
       });
-
     } catch (err) {
       console.error(err);
     }
@@ -256,7 +274,11 @@ const Productos = () => {
       ) : (
         <Row>
           <Col xs={12} className="d-lg-none">
-            <TarjetaProductos productos={productosFiltrados} />
+            <TarjetaProductos
+              productos={productosFiltrados}
+              abrirModalEdicion={abrirModalEdicion}
+              abrirModalEliminacion={abrirModalEliminacion}
+            />
           </Col>
 
           <Col lg={12} className="d-none d-lg-block">
