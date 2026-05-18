@@ -5,7 +5,6 @@ import logo from "../../assets/logo.png";
 import { supabase } from "../../database/supabaseconfig";
 
 const Encabezado = () => {
-
   const [mostrarMenu, setMostrarMenu] = useState(false);
   const navigate = useNavigate();
   const location = useLocation(); //Para detectar la ruta actual
@@ -32,7 +31,7 @@ const Encabezado = () => {
 
   //Detectar rutas especiales
   const esLogin = location.pathname === "/login";
-  const esCatalogo = 
+  const esCatalogo =
     location.pathname === "/catalogo" &&
     localStorage.getItem("usuario-supabase") === null;
 
@@ -92,6 +91,22 @@ const Encabezado = () => {
               <strong>Productos</strong>
             </Nav.Link>
 
+            <Nav.Link
+              onClick={() => manejarNavegacion("/empleados")}
+              className={mostrarMenu ? "color-texto-marca" : "text-white"}
+            >
+              {mostrarMenu ? <i className="bi-people-fill me-2"></i> : null}
+              <strong>Empleados</strong>
+            </Nav.Link>
+
+            <Nav.Link
+              onClick={() => manejarNavegacion("/clientes")}
+              className="text-white"
+            >
+              {mostrarMenu && <i className="bi-person-lines-fill me-2"></i>}
+              <strong>Clientes</strong>
+            </Nav.Link>
+
             {/*Opción para ir al catálogo público desde admin */}
             <Nav.Link
               onClick={() => manejarNavegacion("/catalogo")}
@@ -121,7 +136,8 @@ const Encabezado = () => {
             <div className="mt-3 p-3 rounded bg-light text-dark">
               <p className="mb-2">
                 <i className="bi-envelope-fill me-2"></i>
-                {localStorage.getItem("usuario-supabase")?.toLowerCase() || "Usuario"}
+                {localStorage.getItem("usuario-supabase")?.toLowerCase() ||
+                  "Usuario"}
               </p>
 
               <button
@@ -139,13 +155,17 @@ const Encabezado = () => {
   }
 
   return (
-    <Navbar expand="md" fixed="top" className="color-navbar shadow-lg" variant="dark">
+    <Navbar
+      expand="md"
+      fixed="top"
+      className="color-navbar shadow-lg"
+      variant="dark"
+    >
       <Container>
-
         <Navbar.Brand
           onClick={() => manejarNavegacion(esCatalogo ? "/catalogo" : "/")}
           className="text-white fw-bold d-flex align-items-center"
-          style={{cursor: "pointer"}}
+          style={{ cursor: "pointer" }}
         >
           <img
             alt=""
@@ -178,13 +198,11 @@ const Encabezado = () => {
             <Offcanvas.Title>Menú Luna</Offcanvas.Title>
           </Offcanvas.Header>
 
-          <Offcanvas.Body>
-            {contenidoMenu}
-          </Offcanvas.Body>
+          <Offcanvas.Body>{contenidoMenu}</Offcanvas.Body>
         </Navbar.Offcanvas>
       </Container>
     </Navbar>
   );
-}
+};
 
 export default Encabezado;
