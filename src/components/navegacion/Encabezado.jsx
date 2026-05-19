@@ -4,10 +4,16 @@ import { Container, Nav, Navbar, Offcanvas } from "react-bootstrap";
 import logo from "../../assets/logo.png";
 import { supabase } from "../../database/supabaseconfig";
 
+// 6. Asegurese de importar AuthContext en su componente Encabezado:
+import { useAuth } from "../../context/AuthContext";
+
 const Encabezado = () => {
   const [mostrarMenu, setMostrarMenu] = useState(false);
   const navigate = useNavigate();
   const location = useLocation(); //Para detectar la ruta actual
+
+  // 7. Dentro de la lógia del Encabezado desestructure la funcion paa verrificar los permisos, cierre de sesión y usuario autenticado:
+  const { tienePermiso, logout, usuario } = useAuth();
 
   const manejarToggle = () => setMostrarMenu(!mostrarMenu);
 
@@ -16,17 +22,11 @@ const Encabezado = () => {
     setMostrarMenu(false);
   };
 
+  // 8. Actualice la función cerrarSesion, quedando de la siguiente forma:
   const cerrarSesion = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-
-      localStorage.removeItem("usuario-supabase");
-      setMostrarMenu(false);
-      navigate("/login");
-    } catch (err) {
-      console.error("Error cerrando sesión: ", err.message);
-    }
+    await logout();
+    setMostrarMenu(false);
+    navigate("/login");
   };
 
   //Detectar rutas especiales
@@ -67,63 +67,83 @@ const Encabezado = () => {
       contenidoMenu = (
         <>
           <Nav className="ms-auto pe-2">
-            <Nav.Link
-              onClick={() => manejarNavegacion("/")}
-              className={mostrarMenu ? "color-texto-marca" : "text-white"}
-            >
-              {mostrarMenu ? <i className="bi-house-fill me-2"></i> : null}
-              <strong>Inicio</strong>
-            </Nav.Link>
+            {/* 9. Utilice la función tienePermiso para valdiar y envolver las opciones de navegación */}
 
-            <Nav.Link
-              onClick={() => manejarNavegacion("/categorias")}
-              className={mostrarMenu ? "color-texto-marca" : "text-white"}
-            >
-              {mostrarMenu ? <i className="bi-bookmark-fill me-2"></i> : null}
-              <strong>Categorías</strong>
-            </Nav.Link>
+            {tienePermiso("ver_inicio") && (
+              <Nav.Link
+                onClick={() => manejarNavegacion("/")}
+                className={mostrarMenu ? "color-texto-marca" : "text-white"}
+              >
+                <i className="bi-house-fill me-2"></i>
+                <strong>Inicio</strong>
+              </Nav.Link>
+            )}
 
-            <Nav.Link
-              onClick={() => manejarNavegacion("/productos")}
-              className={mostrarMenu ? "color-texto-marca" : "text-white"}
-            >
-              {mostrarMenu ? <i className="bi-bag-heart-fill me-2"></i> : null}
-              <strong>Productos</strong>
-            </Nav.Link>
+            {tienePermiso("ver_categorias") && (
+              <Nav.Link
+                onClick={() => manejarNavegacion("/categorias")}
+                className={mostrarMenu ? "color-texto-marca" : "text-white"}
+              >
+                <i className="bi-bookmark-fill me-2"></i>
+                <strong>Categorías</strong>
+              </Nav.Link>
+            )}
 
-            <Nav.Link
-              onClick={() => manejarNavegacion("/empleados")}
-              className={mostrarMenu ? "color-texto-marca" : "text-white"}
-            >
-              {mostrarMenu ? <i className="bi-people-fill me-2"></i> : null}
-              <strong>Empleados</strong>
-            </Nav.Link>
+            {tienePermiso("ver_productos") && (
+              <Nav.Link
+                onClick={() => manejarNavegacion("/productos")}
+                className={mostrarMenu ? "color-texto-marca" : "text-white"}
+              >
+                <i className="bi-bag-heart-fill me-2"></i>
+                <strong>Productos</strong>
+              </Nav.Link>
+            )}
 
-            <Nav.Link
-              onClick={() => manejarNavegacion("/clientes")}
-              className="text-white"
-            >
-              {mostrarMenu && <i className="bi-person-lines-fill me-2"></i>}
-              <strong>Clientes</strong>
-            </Nav.Link>
+            {tienePermiso("ver_empleados") && (
+              <Nav.Link
+                onClick={() => manejarNavegacion("/empleados")}
+                className={mostrarMenu ? "color-texto-marca" : "text-white"}
+              >
+                <i className="bi-people-fill me-2"></i>
+                <strong>Empleados</strong>
+              </Nav.Link>
+            )}
+
+            {tienePermiso("ver_clientes") && (
+              <Nav.Link
+                onClick={() => manejarNavegacion("/clientes")}
+                className={mostrarMenu ? "color-texto-marca" : "text-white"}
+              >
+                <i className="bi-person-lines-fill me-2"></i>
+                <strong>Clientes</strong>
+              </Nav.Link>
+            )}
+
+            {/* Opción para navegar a la vista de Permisos */}
+            {tienePermiso("ver_permisos") && (
+              <Nav.Link
+                onClick={() => manejarNavegacion("/permisos")}
+                className={mostrarMenu ? "color-texto-marca" : "text-white"}
+              >
+                <i className="bi-shield-lock-fill me-2"></i>
+                <strong>Permisos</strong>
+              </Nav.Link>
+            )}
 
             {/*Opción para ir al catálogo público desde admin */}
             <Nav.Link
               onClick={() => manejarNavegacion("/catalogo")}
               className={mostrarMenu ? "color-texto-marca" : "text-white"}
             >
-              {mostrarMenu ? <i className="bi-images me-2"></i> : null}
+              <i className="bi-images me-2"></i>
               <strong>Catálogo</strong>
             </Nav.Link>
 
             <hr />
 
-            {/*Icono cerrar sesión en barra superior */}
-            {mostrarMenu ? null : (
-              <Nav.Link
-                onClick={cerrarSesion}
-                className={mostrarMenu ? "color-texto-marca" : "text-white"}
-              >
+            {/*Icono cerrar sesión en barra superior (visible solo cuando el menú colapsable está cerrado) */}
+            {!mostrarMenu && (
+              <Nav.Link onClick={cerrarSesion} className="text-white">
                 <i className="bi-box-arrow-right me-2"></i>
               </Nav.Link>
             )}
@@ -131,12 +151,13 @@ const Encabezado = () => {
             <hr />
           </Nav>
 
-          {/*Información del usuario y boton cerrar sesión */}
+          {/*Información del usuario y boton cerrar sesión dentro del Offcanvas */}
           {mostrarMenu && (
             <div className="mt-3 p-3 rounded bg-light text-dark">
               <p className="mb-2">
                 <i className="bi-envelope-fill me-2"></i>
-                {localStorage.getItem("usuario-supabase")?.toLowerCase() ||
+                {usuario?.email?.toLowerCase() ||
+                  localStorage.getItem("usuario-supabase")?.toLowerCase() ||
                   "Usuario"}
               </p>
 
