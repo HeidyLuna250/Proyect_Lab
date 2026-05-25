@@ -10,6 +10,7 @@ const ModalEliminacionCliente = ({
   const [deshabilitado, setDeshabilitado] = useState(false);
 
   const handleEliminar = async () => {
+    if (deshabilitado) return;
     setDeshabilitado(true);
     await eliminarCliente();
     setDeshabilitado(false);
@@ -19,16 +20,19 @@ const ModalEliminacionCliente = ({
     <Modal
       show={mostrarModalEliminacion}
       onHide={() => setMostrarModalEliminacion(false)}
+      backdrop="static"
+      keyboard={false}
       centered
     >
-      <Modal.Header closeButton className="bg-danger text-white">
-        <Modal.Title>Eliminar Cliente</Modal.Title>
+      <Modal.Header closeButton>
+        <Modal.Title>Confirmar Eliminación</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="text-center">
-        <p>
-          ¿Seguro que deseas eliminar a{" "}
-          <strong>{cliente?.nombre_cliente}</strong>?
-        </p>
+      <Modal.Body>
+        ¿Estás seguro de que deseas eliminar al cliente{" "}
+        <strong>
+          {cliente?.nombre_cliente} {cliente?.apellido_cliente}
+        </strong>
+        ?
       </Modal.Body>
       <Modal.Footer>
         <Button
@@ -42,7 +46,7 @@ const ModalEliminacionCliente = ({
           onClick={handleEliminar}
           disabled={deshabilitado}
         >
-          Eliminar
+          Eliminar Cliente
         </Button>
       </Modal.Footer>
     </Modal>
