@@ -5,6 +5,7 @@ import logo from "../../assets/logo.png";
 
 // 6. Asegurese de importar AuthContext en su componente Encabezado:
 import { useAuth } from "../../context/AuthContext";
+import InstallPWAButton from "../InstallPWAButton";
 
 const Encabezado = () => {
   const [mostrarMenu, setMostrarMenu] = useState(false);
@@ -206,6 +207,9 @@ const Encabezado = () => {
             <h4 className="mb-0">Luna</h4>
           </strong>
         </Navbar.Brand>
+
+        {/* Botón de instalación PWA */}
+        <InstallPWAButton />
 
         {/* Botón del menú */}
         {!esLogin && (
