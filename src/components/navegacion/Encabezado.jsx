@@ -6,9 +6,11 @@ import logo from "../../assets/logo.png";
 // 6. Asegurese de importar AuthContext en su componente Encabezado:
 import { useAuth } from "../../context/AuthContext";
 import InstallPWAButton from "../InstallPWAButton";
+import ChatIA from "../ia/ChatIA";
 
 const Encabezado = () => {
   const [mostrarMenu, setMostrarMenu] = useState(false);
+  const [mostrarChatIA, setMostrarChatIA] = useState(false);
   const navigate = useNavigate();
   const location = useLocation(); //Para detectar la ruta actual
 
@@ -147,6 +149,10 @@ const Encabezado = () => {
               <strong>Ventas</strong>
             </Nav.Link>
 
+            <Nav.Link onClick={() => setMostrarChatIA(true)} className="text-white">
+              <i className="bi bi-robot me-2"></i>
+            </Nav.Link>
+
             <hr />
 
             {/*Icono cerrar sesión en barra superior (visible solo cuando el menú colapsable está cerrado) */}
@@ -184,12 +190,13 @@ const Encabezado = () => {
   }
 
   return (
-    <Navbar
-      expand="md"
-      fixed="top"
-      className="color-navbar shadow-lg"
-      variant="dark"
-    >
+    <>
+      <Navbar
+        expand="md"
+        fixed="top"
+        className="color-navbar shadow-lg"
+        variant="dark"
+      >
       <Container>
         <Navbar.Brand
           onClick={() => manejarNavegacion(esCatalogo ? "/catalogo" : "/")}
@@ -233,7 +240,9 @@ const Encabezado = () => {
           <Offcanvas.Body>{contenidoMenu}</Offcanvas.Body>
         </Navbar.Offcanvas>
       </Container>
-    </Navbar>
+      </Navbar>
+      <ChatIA mostrar={mostrarChatIA} onCerrar={() => setMostrarChatIA(false)} />
+    </>
   );
 };
 

@@ -33,6 +33,7 @@ export default defineConfig({
         enabled: true,
         type: 'module',
         navigateFallback: 'index.html',
+        suppressWarnings: true,
       }
     })
   ],
