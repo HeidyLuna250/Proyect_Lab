@@ -6,6 +6,8 @@ const TablaProductos = ({
   productos,
   abrirModalEdicion,
   abrirModalEliminacion,
+  copiarProducto,
+  generarQRImagen,
 }) => {
   const [loading, setLoading] = useState(true);
 
@@ -76,23 +78,42 @@ const TablaProductos = ({
                   />
                 </td>
 
-                <td className="text-center">
-                  <Button
-                    variant="outline-warning"
-                    size="sm"
-                    className="m-1"
-                    onClick={() => abrirModalEdicion(producto)}
-                  >
-                    <i className="bi bi-pencil"></i>
-                  </Button>
+                <td className="text-center align-middle">
+                  <div className="d-flex justify-content-center gap-2">
+                    <Button
+                      variant="outline-warning"
+                      size="sm"
+                      onClick={() => abrirModalEdicion(producto)}
+                    >
+                      <i className="bi bi-pencil"></i>
+                    </Button>
 
-                  <Button
-                    variant="outline-danger"
-                    size="sm"
-                    onClick={() => abrirModalEliminacion(producto)}
-                  >
-                    <i className="bi bi-trash"></i>
-                  </Button>
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      onClick={() => abrirModalEliminacion(producto)}
+                    >
+                      <i className="bi bi-trash"></i>
+                    </Button>
+
+                    <Button
+                      variant="outline-success"
+                      size="sm"
+                      onClick={() => copiarProducto(producto)}
+                      title="Copiar al portapapeles"
+                    >
+                      <i className="bi bi-clipboard"></i>
+                    </Button>
+
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={() => generarQRImagen(producto)}
+                      title="Generar código QR de la imagen"
+                    >
+                      <i className="bi bi-qr-code"></i>
+                    </Button>
+                  </div>
                 </td>
               </tr>
             ))}

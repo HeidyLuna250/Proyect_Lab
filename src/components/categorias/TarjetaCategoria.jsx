@@ -6,6 +6,7 @@ const TarjetaCategoria = ({
   categorias,
   abrirModalEdicion,
   abrirModalEliminacion,
+  copiarCategoria,
 }) => {
   const [cargando, setCargando] = useState(true);
   const [idTarjetaActiva, setIdTarjetaActiva] = useState(null);
@@ -116,6 +117,17 @@ const TarjetaCategoria = ({
                           }}
                         >
                           <i className="bi bi-trash"></i>
+                        </Button>
+                        <Button
+                          variant="success"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            copiarCategoria(categoria);
+                          }}
+                          title="Copiar al portapapeles"
+                        >
+                          <i className="bi bi-clipboard"></i>
                         </Button>
                       </div>
                     </div>

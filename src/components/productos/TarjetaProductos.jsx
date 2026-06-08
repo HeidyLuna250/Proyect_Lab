@@ -6,6 +6,8 @@ const TarjetaProductos = ({
   productos,
   abrirModalEdicion,
   abrirModalEliminacion,
+  copiarProducto,
+  generarQRImagen,
 }) => {
   const [cargando, setCargando] = useState(true);
   const [idTarjetaActiva, setIdTarjetaActiva] = useState(null);
@@ -138,6 +140,29 @@ const TarjetaProductos = ({
                           }}
                         >
                           <i className="bi bi-trash"></i>
+                        </Button>
+                        <Button
+                          variant="success"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            copiarProducto(producto);
+                          }}
+                          title="Copiar al portapapeles"
+                        >
+                          <i className="bi bi-clipboard"></i>
+                        </Button>
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            generarQRImagen(producto);
+                            setIdTarjetaActiva(null);
+                          }}
+                          title="Generar código QR de la imagen"
+                        >
+                          <i className="bi bi-qr-code"></i>
                         </Button>
                       </div>
                     </div>

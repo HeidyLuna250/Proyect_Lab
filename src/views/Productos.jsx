@@ -8,6 +8,7 @@ import TablaProductos from "../components/productos/TablaProductos";
 import TarjetaProductos from "../components/productos/TarjetaProductos";
 import ModalEdicionProducto from "../components/productos/ModalEdicionProducto";
 import ModalEliminacionProducto from "../components/productos/ModalEliminacionProducto";
+import ModalQRProducto from "../components/productos/ModalQRProducto";
 
 const Productos = () => {
   const [productos, setProductos] = useState([]);
@@ -23,6 +24,9 @@ const Productos = () => {
 
   const [productoEditar, setProductoEditar] = useState(null);
   const [productoAEliminar, setProductoAEliminar] = useState(null);
+
+  const [mostrarModalQR, setMostrarModalQR] = useState(false);
+  const [productoQR, setProductoQR] = useState(null);
 
   const [nuevoProducto, setNuevoProducto] = useState({
     nombre_producto: "",
@@ -174,6 +178,49 @@ const Productos = () => {
     setMostrarModalEliminacion(true);
   };
 
+  const generarQRImagen = (producto) => {
+    if (!producto?.url_imagen) {
+      setToast({
+        mostrar: true,
+        mensaje: "Este producto no tiene imagen asociada",
+        tipo: "advertencia"
+      });
+      return;
+    }
+    
+    setProductoQR(producto);
+    setMostrarModalQR(true);
+  };
+
+  const copiarProducto = async (producto) => {
+    if (!producto) return;
+
+    const texto = `
+ID: ${producto.id_producto}
+Producto: ${producto.nombre_producto}
+Descripción: ${producto.descripcion_producto || 'Sin descripción'}
+Precio: $${producto.precio_venta}
+Categoría: ${producto.Categorias?.nombre_categoria || 'Sin categoría'}
+    `.trim();
+
+    try {
+      await navigator.clipboard.writeText(texto);
+
+      setToast({
+        mostrar: true,
+        mensaje: `Producto "${producto.nombre_producto}" copiado al portapapeles`,
+        tipo: "exito",
+      });
+    } catch (err) {
+      console.error("Error al copiar: ", err);
+      setToast({
+        mostrar: true,
+        mensaje: "No se pudo copiar al portapapeles",
+        tipo: "error",
+      });
+    }
+  };
+
     const actualizarProducto = async () => {
     try {
 
@@ -278,6 +325,8 @@ const Productos = () => {
               productos={productosFiltrados}
               abrirModalEdicion={abrirModalEdicion}
               abrirModalEliminacion={abrirModalEliminacion}
+              copiarProducto={copiarProducto}
+              generarQRImagen={generarQRImagen}
             />
           </Col>
 
@@ -286,6 +335,8 @@ const Productos = () => {
               productos={productosFiltrados}
               abrirModalEdicion={abrirModalEdicion}
               abrirModalEliminacion={abrirModalEliminacion}
+              copiarProducto={copiarProducto}
+              generarQRImagen={generarQRImagen}
             />
           </Col>
         </Row>
@@ -325,6 +376,12 @@ const Productos = () => {
         setMostrarModalEliminacion={setMostrarModalEliminacion}
         eliminarProducto={eliminarProducto}
         producto={productoAEliminar}
+      />
+
+      <ModalQRProducto
+        mostrar={mostrarModalQR}
+        onHide={() => setMostrarModalQR(false)}
+        producto={productoQR}
       />
 
       <NotificacionOperacion

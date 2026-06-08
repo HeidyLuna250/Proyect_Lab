@@ -7,6 +7,7 @@ const TablaCategorias = ({
   abrirModalEdicion,
   abrirModalEliminacion,
   generarPDFCategoria,
+  copiarCategoria,
 }) => {
   const hayCategorias = Array.isArray(categorias) && categorias.length > 0;
 
@@ -34,31 +35,41 @@ const TablaCategorias = ({
                 <td className="d-none d-md-table-cell">
                   {categoria.descripcion_categoria}
                 </td>
-                <td className="text-center">
-                  <Button
-                    variant="outline-warning"
-                    size="sm"
-                    className="m-1"
-                    onClick={() => abrirModalEdicion(categoria)}
-                  >
-                    <i className="bi bi-pencil"></i>
-                  </Button>
+                <td className="text-center align-middle">
+                  <div className="d-flex justify-content-center gap-2">
+                    <Button
+                      variant="outline-warning"
+                      size="sm"
+                      onClick={() => abrirModalEdicion(categoria)}
+                    >
+                      <i className="bi bi-pencil"></i>
+                    </Button>
 
-                  <Button
-                    variant="outline-danger"
-                    size="sm"
-                    onClick={() => abrirModalEliminacion(categoria)}
-                  >
-                    <i className="bi bi-trash"></i>
-                  </Button>
-                  <Button
-                    variant="outline-primary"
-                    size="sm"
-                    className="m-1"
-                    onClick={() => generarPDFCategoria(categoria)}
-                  >
-                    <i className="bi bi-file-earmark-pdf"></i>
-                  </Button>
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      onClick={() => abrirModalEliminacion(categoria)}
+                    >
+                      <i className="bi bi-trash"></i>
+                    </Button>
+
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={() => generarPDFCategoria(categoria)}
+                    >
+                      <i className="bi bi-file-earmark-pdf"></i>
+                    </Button>
+
+                    <Button
+                      variant="outline-success"
+                      size="sm"
+                      onClick={() => copiarCategoria(categoria)}
+                      title="Copiar al portapapeles"
+                    >
+                      <i className="bi bi-clipboard"></i>
+                    </Button>
+                  </div>
                 </td>
               </tr>
             ))}
