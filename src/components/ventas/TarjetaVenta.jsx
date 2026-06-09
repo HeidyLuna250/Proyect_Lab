@@ -37,24 +37,15 @@ const TarjetaVenta = ({ ventas, abrirEdicion }) => {
             return (
               <Card
                 key={venta.id_venta}
-                className="mb-3 border-0 rounded-3 shadow-sm w-100 tarjeta-venta-contenedor"
-                onClick={() => alternarTarjetaActiva(venta.id_venta)}
-                tabIndex={0}
-                onKeyDown={(evento) => {
-                  if (evento.key === "Enter" || evento.key === " ") {
-                    evento.preventDefault();
-                    alternarTarjetaActiva(venta.id_venta);
-                  }
+                className="mb-3 border-0 rounded-3 shadow-sm w-100"
+                style={{
+                  cursor: "pointer",
+                  transition: "0.2s",
                 }}
-                aria-label={`Venta ${venta.id_venta}`}
+                onMouseEnter={() => setIdTarjetaActiva(venta.id_venta)}
+                onMouseLeave={() => setIdTarjetaActiva(null)}
               >
-                <Card.Body
-                  className={`p-2 tarjeta-venta-cuerpo ${
-                    tarjetaActiva
-                      ? "tarjeta-venta-cuerpo-activo"
-                      : "tarjeta-venta-cuerpo-inactivo"
-                  }`}
-                >
+                <Card.Body style={{ position: "relative" }}>
                   <Row className="align-items-center gx-3">
                     <Col xs={2} className="px-2">
                       <div className="bg-light d-flex align-items-center justify-content-center rounded tarjeta-venta-placeholder-imagen">
@@ -76,32 +67,36 @@ const TarjetaVenta = ({ ventas, abrirEdicion }) => {
                       </div>
                     </Col>
                   </Row>
-                </Card.Body>
-
-                {tarjetaActiva && (
-                  <div
-                    role="dialog"
-                    aria-modal="true"
-                    onClick={(e) => e.stopPropagation()}
-                    className="tarjeta-venta-capa"
-                  >
+                  {tarjetaActiva && (
                     <div
-                      className="d-flex gap-2 tarjeta-venta-botones-capa"
-                      onClick={(e) => e.stopPropagation()}
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        background: "rgba(0,0,0,0.4)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderRadius: "10px",
+                      }}
                     >
-                      <Button
-                        variant="outline-warning"
-                        size="sm"
-                        onClick={() => {
-                          abrirEdicion(venta);
-                          setIdTarjetaActiva(null);
-                        }}
-                      >
-                        <i className="bi bi-pencil"></i>
-                      </Button>
+                      <div className="d-flex gap-2">
+                        <Button
+                          variant="warning"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            abrirEdicion(venta);
+                          }}
+                        >
+                          <i className="bi bi-pencil"></i>
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </Card.Body>
               </Card>
             );
           })}

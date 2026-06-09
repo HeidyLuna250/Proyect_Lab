@@ -24,6 +24,7 @@ const InstallPWAButton = () => {
     const handleAppInstalled = () => {
       setIsVisible(false);
       setDeferredPrompt(null);
+      window.deferredPWAInstallPrompt = null;
       console.log('PWA fue instalada exitosamente');
     };
 
@@ -52,6 +53,7 @@ const InstallPWAButton = () => {
     // Si aceptó, ocultamos el botón
     if (outcome === 'accepted') {
       setIsVisible(false);
+      window.deferredPWAInstallPrompt = null;
     }
   };
 
@@ -65,7 +67,7 @@ const InstallPWAButton = () => {
 
   return (
     <Button 
-      variant="outline-light" 
+      variant="outline-primary" 
       onClick={handleInstallClick}
       className="d-flex align-items-center gap-2 btn-sm ms-auto me-2"
     >

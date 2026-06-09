@@ -293,7 +293,9 @@ Categoría: ${producto.Categorias?.nombre_categoria || 'Sin categoría'}
     <Container className="mt-3">
       <Row className="align-items-center mb-3">
         <Col>
-          <h3>Productos</h3>
+          <h3>
+            <i className="bi-bag-heart-fill me-2"></i>Productos
+          </h3>
         </Col>
 
         <Col className="text-end">

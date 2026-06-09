@@ -15,6 +15,8 @@ import Clientes from "./views/Clientes";
 import Permisos from './views/Permisos';
 import Ventas from './views/Ventas';
 
+import Perfil from './views/Perfil';
+
 const App = () => {
   return(
     <Router>
@@ -32,6 +34,7 @@ const App = () => {
           <Route path='/clientes' element={<RutaProtegida><Clientes /></RutaProtegida>} />
           <Route path="/ventas" element={<RutaProtegida><Ventas /></RutaProtegida>} />
           <Route path="/permisos" element={<RutaProtegida><Permisos /></RutaProtegida>} />
+          <Route path="/perfil" element={<RutaProtegida><Perfil /></RutaProtegida>} />
           <Route path='*' element={<Pagina404/>} />
         </Routes>
       </main>

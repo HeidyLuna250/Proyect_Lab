@@ -38,24 +38,15 @@ const TarjetaEmpleado = ({ empleados, abrirModalEdicion }) => {
             return (
               <Card
                 key={empleado.id_empleado}
-                className="mb-3 border-0 rounded-3 shadow-sm w-100 tarjeta-empleado-contenedor"
-                onClick={() => alternarTarjetaActiva(empleado.id_empleado)}
-                tabIndex={0}
-                onKeyDown={(evento) => {
-                  if (evento.key === "Enter" || evento.key === " ") {
-                    evento.preventDefault();
-                    alternarTarjetaActiva(empleado.id_empleado);
-                  }
+                className="mb-3 border-0 rounded-3 shadow-sm w-100"
+                style={{
+                  cursor: "pointer",
+                  transition: "0.2s",
                 }}
-                aria-label={`Empleado ${empleado.nombre_empleado} ${empleado.apellido_empleado}`}
+                onMouseEnter={() => setIdTarjetaActiva(empleado.id_empleado)}
+                onMouseLeave={() => setIdTarjetaActiva(null)}
               >
-                <Card.Body
-                  className={`p-2 tarjeta-empleado-cuerpo ${
-                    tarjetaActiva
-                      ? "tarjeta-empleado-cuerpo-activo"
-                      : "tarjeta-empleado-cuerpo-inactivo"
-                  }`}
-                >
+                <Card.Body style={{ position: "relative" }}>
                   <Row className="align-items-center gx-3">
                     <Col xs="auto" className="px-2">
                       <div
@@ -89,36 +80,36 @@ const TarjetaEmpleado = ({ empleados, abrirModalEdicion }) => {
                       <div className="fw-semibold small">Activo</div>
                     </Col>
                   </Row>
-                </Card.Body>
-
-                {tarjetaActiva && (
-                  <div
-                    role="dialog"
-                    aria-modal="true"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIdTarjetaActiva(null);
-                    }}
-                    className="tarjeta-empleado-capa"
-                  >
+                  {tarjetaActiva && (
                     <div
-                      className="d-flex gap-2 tarjeta-empleado-botones-capa"
-                      onClick={(e) => e.stopPropagation()}
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        background: "rgba(0,0,0,0.4)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderRadius: "10px",
+                      }}
                     >
-                      <Button
-                        variant="outline-warning"
-                        size="sm"
-                        onClick={() => {
-                          abrirModalEdicion(empleado);
-                          setIdTarjetaActiva(null);
-                        }}
-                        aria-label={`Editar ${empleado.nombre_empleado} ${empleado.apellido_empleado}`}
-                      >
-                        <i className="bi bi-pencil"></i>
-                      </Button>
+                      <div className="d-flex gap-2">
+                        <Button
+                          variant="warning"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            abrirModalEdicion(empleado);
+                          }}
+                        >
+                          <i className="bi bi-pencil"></i>
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </Card.Body>
               </Card>
             );
           })}

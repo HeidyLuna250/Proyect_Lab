@@ -9,9 +9,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'logo.png'],
       manifest: {
-        name: 'Luna - Proyect Lab',
-        short_name: 'Luna',
-        description: 'Aplicación para gestión de Luna',
+        name: 'NL Variedades',
+        short_name: 'NL Variedades',
+        description: 'Aplicación para gestión de NL Variedades',
         theme_color: '#ffffff',
         background_color: '#ffffff',
         display: 'standalone',
