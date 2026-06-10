@@ -522,7 +522,7 @@ const Inicio = () => {
             />
           </Form.Group>
         </Col>
-        <Col md={6} className="d-flex align-items-end gap-2">
+        <Col xs={12} md={6} className="d-flex flex-column flex-md-row align-items-stretch align-items-md-end gap-2 mt-3 mt-md-0">
           <Button variant="success" onClick={descargarExcel}>
             <i className="bi bi-file-earmark-excel me-2"></i>
             Descargar Excel
